@@ -1,7 +1,7 @@
 
 
-#SAT 19/10/24 Next Meeting
-#Deadline 24/10/24 
+# SAT 19/10/24 Next Meeting
+# Deadline 24/10/24 
 
 # Carbon_Footprints
 Web application for calculating carbon footprint.
