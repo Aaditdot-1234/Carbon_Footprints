@@ -20,9 +20,9 @@ Timeline:
 2) Gather requirements for the project. (Tuesday)
 
 UI [Next.js](Priority-1){Adit and Gunjan}:
-Page 1:- Login and SignUp Page
-Page 2:- User Profile and Information
-Page 3:- LeaderBoards Page
+- Page 1:- Login and SignUp Page
+- Page 2:- User Profile and Information
+- Page 3:- LeaderBoards Page
 
 Backend[Flask](Priority-1){Manas}:
 - Carbon Footprint Calculation
