@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Footprint Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function toggleFields(sectionIndex) {
+            const mode = document.getElementById(`mode_${sectionIndex}`).value;
+            const fuelType = document.getElementById(`fuel_type_${sectionIndex}`);
+            const mileage = document.getElementById(`mileage_${sectionIndex}`);
+
+            // Enable for personal vehicles, disable for public transport
+            if (mode === 'Car' || mode === 'Motorbike') {
+                fuelType.disabled = false;
+                mileage.disabled = false;
+            } else {
+                fuelType.disabled = true;
+                mileage.disabled = true;
+                fuelType.value = "";  // Reset value
+                mileage.value = "";   // Reset value
+            }
+        }
+
+        function addSection() {
+            const sectionCount = document.querySelectorAll('.section').length;
+            if (sectionCount >= 6) {
+                alert('You can only add up to 6 sections.');
+                return;
+            }
+
+            const newSection = document.createElement('div');
+            newSection.className = 'section';
+            newSection.innerHTML = `
+                <h3>Commute Section ${sectionCount + 1}</h3>
+                <label for="mode_${sectionCount}">Mode of Transport:</label>
+                <select id="mode_${sectionCount}" name="mode_${sectionCount}" required onchange="toggleFields(${sectionCount})">
+                    <option value="">Select Mode</option>
+                    <option value="Car">Car</option>
+                    <option value="Motorbike">Motorbike</option>
+                    <option value="Bus">Bus</option>
+                    <option value="Train">Train</option>
+                    <option value="Airplane">Airplane</option>
+                    <option value="Ferry">Ferry</option>
+                    <option value="Bicycle">Bicycle</option>
+                    <option value="Walking">Walking</option>
+                </select>
+
+                <label for="fuel_type_${sectionCount}">Fuel Type:</label>
+                <select id="fuel_type_${sectionCount}" name="fuel_type_${sectionCount}" required>
+                    <option value="">Select Fuel Type</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="CNG">CNG</option>
+                    <option value="Electric">Electric</option>
+                </select>
+
+                <label for="mileage_${sectionCount}">Vehicle Mileage (Only for Personal):</label>
+                <select id="mileage_${sectionCount}" name="mileage_${sectionCount}">
+                    <option value="">Select Mileage</option>
+                    {% for i in range(5, 55, 5) %}
+                    <option value="{{ i }}-{{ i + 5 }}">{{ i }} - {{ i + 5 }} kmpl</option>
+                    {% endfor %}
+                </select>
+
+                <label for="distance_${sectionCount}">Distance Travelled (in kms):</label>
+                <input type="number" id="distance_${sectionCount}" name="distance_${sectionCount}" step="0.1" required>
+
+                <button type="button" onclick="removeSection(this)">Remove Section</button>
+            `;
+            document.getElementById('sectionsContainer').appendChild(newSection);
+            toggleFields(sectionCount); // Initialize new section fields
+        }
+
+        function removeSection(button) {
+            const section = button.closest('.section'); // Find the closest section element
+            if (section) {
+                section.parentElement.removeChild(section);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Daily Commute Carbon Footprint Calculator</h1>
+
+        <form method="POST">
+            <div id="sectionsContainer">
+                {% for section in sections %}
+                <div class="section">
+                    <h3>Commute Section {{ loop.index }}</h3> <!-- This gives you the index (1-based) -->
+                    <label for="mode_{{ loop.index - 1 }}">Mode of Transport:</label>
+                    <select id="mode_{{ loop.index - 1 }}" name="mode_{{ loop.index - 1 }}" required onchange="toggleFields({{ loop.index - 1 }})">
+                        <option value="">Select Mode</option>
+                        <option value="Car" {% if section.mode == 'Car' %}selected{% endif %}>Car</option>
+                        <option value="Motorbike" {% if section.mode == 'Motorbike' %}selected{% endif %}>Motorbike</option>
+                        <option value="Bicycle" {% if section.mode == 'Bicycle' %}selected{% endif %}>Bicycle</option>
+                        <option value="Bus" {% if section.mode == 'Bus' %}selected{% endif %}>Bus</option>
+                        <option value="Train" {% if section.mode == 'Train' %}selected{% endif %}>Train</option>
+                        <option value="Airplane" {% if section.mode == 'Airplane' %}selected{% endif %}>Airplane</option>
+                        <option value="Ferry" {% if section.mode == 'Ferry' %}selected{% endif %}>Ferry</option>
+                        <option value="Walking" {% if section.mode == 'Walking' %}selected{% endif %}>Walking</option>
+                    </select>
+            
+                    <label for="fuel_type_{{ loop.index - 1 }}">Transport Fuel Type:</label>
+                    <select id="fuel_type_{{ loop.index - 1 }}" name="fuel_type_{{ loop.index - 1 }}" {% if section.mode not in ['Car', 'Motorbike'] %}disabled{% endif %}>
+                        <option value="">Select Fuel Type</option>
+                        <option value="Petrol" {% if section.fuel_type == 'Petrol' %}selected{% endif %}>Petrol</option>
+                        <option value="Diesel" {% if section.fuel_type == 'Diesel' %}selected{% endif %}>Diesel</option>
+                        <option value="CNG" {% if section.fuel_type == 'CNG' %}selected{% endif %}>CNG</option>
+                        <option value="Electric" {% if section.fuel_type == 'Electric' %}selected{% endif %}>Electric</option>
+                    </select>
+            
+                    <label for="mileage_{{ loop.index - 1 }}">Vehicle Mileage (Only for Personal):</label>
+                    <select id="mileage_{{ loop.index - 1 }}" name="mileage_{{ loop.index - 1 }}" {% if section.mode not in ['Car', 'Motorbike'] %}disabled{% endif %}>
+                        <option value="">Select Mileage</option>
+                        {% for i in range(5, 55, 5) %}
+                            <option value="{{ i }}-{{ i + 5 }}" {% if section.mileage == (i ~ '-' ~ (i + 5)) %}selected{% endif %}>{{ i }} - {{ i + 5 }} kmpl</option>
+                        {% endfor %}
+                    </select>
+            
+                    <label for="distance_{{ loop.index - 1 }}">Distance Travelled (in km):</label>
+                    <input type="number" id="distance_{{ loop.index - 1 }}" name="distance_{{ loop.index - 1 }}" value="{{ section.distance }}" required>
+            
+                    <button type="button" onclick="removeSection(this)">Remove Section</button>
+                </div>
+            {% endfor %}
+            </div>
+
+            <button type="button" onclick="addSection()">Add Section</button>
+            <button type="submit">Calculate</button>
+        </form>
+
+        {% if total_emission_factor is not none and total_carbon_footprint is not none %}
+        <div class="result">
+            <h2>Total Results</h2>
+            <p><strong>Total Emission Factor:</strong> {{ total_emission_factor }} kg CO₂ per km</p>
+            <p><strong>Total Carbon Footprint:</strong> {{ total_carbon_footprint }} kg CO₂</p>
+
+            <h3>Section-wise Results</h3>
+            <ul>
+                {% for section in sections %}
+                <li>
+                    <strong>Mode:</strong> {{ section.mode }},
+                    <strong>Distance:</strong> {{ section.distance }} km,
+                    <strong>Emission Factor:</strong> {{ section.emission_factor }} kg CO₂/km,
+                    <strong>Carbon Footprint:</strong> {{ section.carbon_footprint }} kg CO₂
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
