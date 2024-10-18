@@ -1,39 +1,43 @@
-# Emission Factor and Carbon Footprint Calculation
+# Carbon Footprint Calculator Documentation
 
-## Definitions
-- **Emission Factor**: The amount of carbon dioxide (CO₂) emitted per kilometer traveled, measured in kilograms (kg CO₂/km).
-- **Carbon Footprint**: The total CO₂ emissions for a journey, calculated as:
-  \[
-  \text{Carbon Footprint} = \text{Emission Factor} \times \text{Distance}
-  \]
+## Emission Factor and Carbon Footprint Calculation
 
-## Modes of Transport and Emission Factors
+### Modes of Transport
 
-| Mode          | Fuel Type       | Emission Factor (kg CO₂/km)   | Description                                            |
-|---------------|------------------|--------------------------------|--------------------------------------------------------|
-| **Car**       | Petrol           | \( \frac{2.31}{\text{Mileage}} \) | Emissions vary based on fuel efficiency.               |
-|               | Diesel           | \( \frac{2.68}{\text{Mileage}} \) | Higher emissions compared to petrol.                   |
-| **Motorbike** | Petrol           | \( \frac{2.0}{\text{Mileage}} \) | Generally lower emissions due to better mileage.       |
-| **Bus**       | N/A              | 0.105                          | Assumed average for public transport efficiency.        |
-| **Train**     | N/A              | 0.041                          | Lower emissions, highly efficient per passenger.       |
-| **Airplane**  | N/A              | 0.257                          | Higher emissions due to altitude and distance.         |
-| **Ferry**     | N/A              | 0.180                          | Varies based on fuel type and vessel efficiency.      |
-| **Bicycle**   | N/A              | 0.0                            | Human-powered, no emissions.                           |
-| **Walking**   | N/A              | 0.0                            | Zero emissions, human-powered transport.               |
+The carbon footprint for various modes of transport is calculated using specific emission factors, which differ based on the mode of transport and the fuel type used. Below is a summary of the calculations:
 
-## Calculation Example
-For a petrol car with a mileage of 10 km/l (0.1 km/l), traveling a distance of 100 km:
-- **Emission Factor**: 
-  \[
-  \frac{2.31}{10} = 0.231 \, \text{kg CO₂/km}
-  \]
-- **Carbon Footprint**: 
-  \[
-  0.231 \, \text{kg CO₂/km} \times 100 \, \text{km} = 23.1 \, \text{kg CO₂}
-  \]
+| Mode of Transport | Emission Factor (kg CO₂/km) | Fuel Type Used              | Description                                           |
+|--------------------|------------------------------|-----------------------------|-------------------------------------------------------|
+| Car                | Fuel-specific                | Petrol: 2.31 kg CO₂/liter  | Calculated as fuel emission per liter divided by vehicle mileage. |
+|                    |                              | Diesel: 2.68 kg CO₂/liter  |                                                       |
+|                    |                              | CNG: 1.75 kg CO₂/liter     |                                                       |
+|                    |                              | Electric: 0.0 kg CO₂/km     | Assuming renewable energy sources.                    |
+| Motorbike          | Fuel-specific                | Petrol: 2.31 kg CO₂/liter  | Calculated as fuel emission per liter divided by vehicle mileage. |
+|                    |                              | Diesel: 2.68 kg CO₂/liter  |                                                       |
+|                    |                              | CNG: 1.75 kg CO₂/liter     |                                                       |
+|                    |                              | Electric: 0.0 kg CO₂/km     | Assuming renewable energy sources.                    |
+| Bus                | 0.105                        | N/A                         | Public transport mode, fixed emission factor.        |
+| Train              | 0.041                        | N/A                         | Public transport mode, fixed emission factor.        |
+| Airplane           | 0.257                        | N/A                         | Public transport mode, fixed emission factor.        |
+| Ferry              | 0.180                        | N/A                         | Public transport mode, fixed emission factor.        |
+| Bicycle            | 0                            | N/A                         | Human-powered transport, zero emissions.             |
+| Walking            | 0                            | N/A                         | Zero emissions, human-powered transport.              |
 
-For a bus traveling 50 km:
-- **Carbon Footprint**: 
-  \[
-  0.105 \, \text{kg CO₂/km} \times 50 \, \text{km} = 5.25 \, \text{kg CO₂}
-  \]
+### Calculation Details
+
+1. **Car and Motorbike**:
+   - **Emission Factor**: Calculated as:
+     - **Emission Factor** = Fuel Emission (kg CO₂/liter) / Mileage (kmpl)
+   - **Carbon Footprint**: 
+     - **Carbon Footprint** = Emission Factor × Distance (km)
+
+2. **Public Transport Modes (Bus, Train, Airplane, Ferry)**:
+   - **Emission Factor**: Fixed value as provided in the table.
+   - **Carbon Footprint**: 
+     - **Carbon Footprint** = Emission Factor × Distance (km)
+
+3. **Bicycle and Walking**:
+   - **Emission Factor**: Zero emissions.
+   - **Carbon Footprint**: Always zero.
+
+This document provides a comprehensive understanding of how the emission factors and carbon footprints are calculated for various modes of transport in the Carbon Footprint Calculator application.
