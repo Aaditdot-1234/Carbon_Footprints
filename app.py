@@ -44,21 +44,32 @@ def calculate():
 
     return render_template('index.html', sections=sections, total_emission_factor=total_emission_factor, total_carbon_footprint=total_carbon_footprint)
 
-def calculate_emission_factor(mode, fuel_type, mileage):
-    # Define your emission factors based on mode and fuel type
-    # This is just a placeholder. Replace with actual values.
+def calculate_emission_factor(mode, fuel_type=None, mileage=None):
     if mode in ['Car', 'Motorbike']:
         if fuel_type == 'Petrol':
             return 2.3 / mileage  # kg CO₂/km
         elif fuel_type == 'Diesel':
             return 2.7 / mileage  # kg CO₂/km
-        # Add more fuel types as needed
-    elif mode in ['Bus', 'Train']:
-        return 0.05  # kg CO₂/km for public transport
+        elif fuel_type == 'CNG':
+            return 1.75 / mileage  # kg CO₂/km
+        elif fuel_type == 'Electric':
+            return 0.0  # kg CO₂/km for electric vehicles
+        else:
+            raise ValueError("Unsupported fuel type")
+    elif mode == 'Bus':
+        return 0.05  # kg CO₂/km for bus travel
+    elif mode == 'Train':
+        return 0.03  # kg CO₂/km for train travel
     elif mode == 'Airplane':
         return 0.15  # kg CO₂/km for air travel
-    # Add more modes and their respective emission factors as needed
-    return 0
+    elif mode == 'Ferry':
+        return 0.07  # kg CO₂/km for ferry travel
+    elif mode == 'Bicycle':
+        return 0.0  # kg CO₂/km for cycling (considered carbon neutral)
+    elif mode == 'Walking':
+        return 0.0  # kg CO₂/km for walking (considered carbon neutral)
+    else:
+        raise ValueError("Unsupported mode of transport")
 
 if __name__ == '__main__':
     app.run(debug=True)
