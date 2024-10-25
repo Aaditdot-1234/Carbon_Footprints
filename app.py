@@ -1,48 +1,50 @@
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route('/calculate', methods=['POST'])
 def calculate():
-    sections = []
-    total_emission_factor = None
-    total_carbon_footprint = None
+    data = request.json
+    sections = data.get('sections', [])
+    
+    total_emission_factor = 0
+    total_carbon_footprint = 0
+    section_results = []
 
-    if request.method == 'POST':
-        # Gather the number of sections dynamically
-        section_count = len([key for key in request.form.keys() if key.startswith('mode_')])
-        total_emission_factor = 0
-        total_carbon_footprint = 0
+    for section in sections:
+        mode = section.get('mode')
+        fuel_type = section.get('fuelType')
+        mileage = section.get('mileage')
+        distance = float(section.get('distance', 0))
 
-        for i in range(section_count):
-            mode = request.form.get(f'mode_{i}')
-            fuel_type = request.form.get(f'fuel_type_{i}')
-            mileage = request.form.get(f'mileage_{i}')
-            distance = float(request.form.get(f'distance_{i}'))
+        if mileage and '-' in mileage:
+            mileage_value = float(mileage.split('-')[0])  # Take the lower bound of the range
+        else:
+            mileage_value = float(mileage) if mileage else 0.0  # Default to 0 if not provided
 
-            # Check if mileage is a range (e.g., '5-10') and extract the lower value
-            if mileage and '-' in mileage:
-                mileage_value = float(mileage.split('-')[0])  # Take the lower bound of the range
-            else:
-                mileage_value = float(mileage) if mileage else 0.0  # Default to 0 if not provided
+        emission_factor = calculate_emission_factor(mode, fuel_type, mileage_value)
+        carbon_footprint = emission_factor * distance
+        
+        total_emission_factor += emission_factor
+        total_carbon_footprint += carbon_footprint
 
-            # Calculate emission factor and carbon footprint
-            emission_factor = calculate_emission_factor(mode, fuel_type, mileage_value)
-            carbon_footprint = emission_factor * distance
-            
-            total_emission_factor += emission_factor
-            total_carbon_footprint += carbon_footprint
+        section_results.append({
+            'mode': mode,
+            'fuelType': fuel_type,
+            'mileage': mileage,
+            'distance': distance,
+            'emissionFactor': emission_factor,
+            'carbonFootprint': carbon_footprint
+        })
 
-            sections.append({
-                'mode': mode,
-                'fuel_type': fuel_type,
-                'mileage': mileage,
-                'distance': distance,
-                'emission_factor': emission_factor,
-                'carbon_footprint': carbon_footprint
-            })
-
-    return render_template('index.html', sections=sections, total_emission_factor=total_emission_factor, total_carbon_footprint=total_carbon_footprint)
+    return jsonify({
+        'sections': section_results,
+        'totalEmissionFactor': total_emission_factor,
+        'totalCarbonFootprint': total_carbon_footprint
+    })
 
 def calculate_emission_factor(mode, fuel_type=None, mileage=None):
     if mode in ['Car', 'Motorbike']:
@@ -54,22 +56,18 @@ def calculate_emission_factor(mode, fuel_type=None, mileage=None):
             return 1.75 / mileage  # kg CO₂/km
         elif fuel_type == 'Electric':
             return 0.0  # kg CO₂/km for electric vehicles
-        else:
-            raise ValueError("Unsupported fuel type")
     elif mode == 'Bus':
-        return 0.05  # kg CO₂/km for bus travel
+        return 0.05
     elif mode == 'Train':
-        return 0.03  # kg CO₂/km for train travel
+        return 0.03
     elif mode == 'Airplane':
-        return 0.15  # kg CO₂/km for air travel
+        return 0.15
     elif mode == 'Ferry':
-        return 0.07  # kg CO₂/km for ferry travel
-    elif mode == 'Bicycle':
-        return 0.0  # kg CO₂/km for cycling (considered carbon neutral)
-    elif mode == 'Walking':
-        return 0.0  # kg CO₂/km for walking (considered carbon neutral)
+        return 0.07
+    elif mode in ['Bicycle', 'Walking']:
+        return 0.0
     else:
-        raise ValueError("Unsupported mode of transport")
+        return 0.0  # default case if no valid mode is selected
 
 if __name__ == '__main__':
     app.run(debug=True)

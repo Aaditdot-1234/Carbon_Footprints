@@ -1,0 +1,218 @@
+body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.Home{
+    height: 100vh;
+    width: 100%;
+}
+
+.section1{
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background-image: url('/footprint.png');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+}
+ 
+.overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    z-index: 2;
+} 
+
+.section2{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-image: url('/background.png');
+    background-size: cover;
+    background-position: center;
+}  
+
+
+.overlay2{
+    position: absolute;
+    z-index: 4;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.5);
+} 
+
+.motiondiv{
+    height: 60% !important;
+    width: 30% !important;
+    background-color: white;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding: 20px;
+    box-shadow: 10px 10px 10px 15px rgba(0, 0, 0, 0.1);
+} 
+
+.motiondiv img{
+    height: 70px;
+    width: 70px;
+}
+.motiondiv h1{
+    font-size: 50px;
+    font-weight: 600;
+    color: rgb(53, 90, 255);
+}
+.motiondiv h3{
+    font-size: 25px;
+    font-weight: 500;
+    color: rgb(0, 168, 121);
+}
+
+.overlay2 div {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin-left: 75px;
+}
+
+.motiondiv2 {
+    height: 45% !important;
+    width: 70% !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: white;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 10px 10px 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.motiondiv2 img{
+    height: 100%;
+    width: 100%;
+    border-radius: 12.5px;
+}
+
+.section3{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('/background2.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.overlay3{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(to right, rgba(133, 46, 255, 0.75), rgba(125, 60, 255, 0.6), rgba(110, 84, 255, 0.75));
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+} 
+
+.overlay3 h1{
+    height: 10%;
+    font-size: 60px;
+    font-weight: 700;
+    color: rgb(0, 168, 121);
+} 
+
+.Carousel{
+    position: relative;
+    height: 90%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 30px;
+} 
+
+.carouseltems{
+    position: absolute;
+    height: 350px;
+    width: 25%;
+    background-color: white;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    box-shadow: 10px 10px 10px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0.5;
+    padding: 20px 40px 20px 20px;
+}
+
+.carouseltems h1{
+    font-size: 35px;
+    color: rgb(76, 255, 157);
+    margin-bottom: 50px;
+}
+
+.carouseltems h3{
+    font-size: 25px;
+    color: rgb(0, 168, 121);
+    margin-bottom: 20px;
+}
+
+.carouseltems a {
+    font-size: 20px;
+    padding: 10px 25px; 
+    border: 0px; 
+    border-radius: 30px;
+    color: white;
+    background-color: rgb(76, 255, 157);
+    margin: 0%;
+    transition: box-shadow 0.3s ease;
+} 
+
+.carouseltems a:hover{
+    box-shadow: 0 0 20px 5px rgba(76, 255, 157,0.75);
+}
+
+.center {
+    transform: scale(1.2);
+    z-index: 10;
+    opacity: 1; 
+}
+
+.left {
+    transform: translateX(-480px) scale(0.9); 
+}
+
+.right {
+    transform: translateX(480px) scale(0.9);
+}
+
+.hidden {
+    opacity: 0; 
+    transform: scale(0.5);
+    z-index: 0;
+}

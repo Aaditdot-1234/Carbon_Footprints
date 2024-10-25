@@ -1,44 +1,40 @@
-# Python bytecode
-__pycache__/
-*.pyc
-*.pyo
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Virtual environment
-env/
-.venv/
-venv/
-ENV/
-env.bak/
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# Flask instance folder
-instance/
-.webassets-cache
+# testing
+/coverage
 
-# Coverage reports
-coverage/
-*.cover
-*.coverage
+# next.js
+/.next/
+/out/
 
-# Pytest
-.cache
-*.pytest_cache
+# production
+/build
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints
+# misc
+.DS_Store
+*.pem
 
-# IDE or Editor files
-.idea/
-.vscode/
-*.swp
-*.swo
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Logs
-*.log
+# env files (can opt-in for commiting if needed)
+.env*
 
-# Python egg info
-*.egg-info/
-dist/
-build/
+# vercel
+.vercel
 
-# Miscellaneous
-*.DS_Store
+# typescript
+*.tsbuildinfo
+next-env.d.ts

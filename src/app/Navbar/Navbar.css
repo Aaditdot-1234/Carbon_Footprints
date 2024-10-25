@@ -1,0 +1,75 @@
+.navbar { 
+    height:70px; 
+    width: 100%; 
+    padding: 10px; 
+    display: flex; 
+    align-items: center;  
+    justify-content: space-between; 
+    width: 100vw;
+    z-index: 100; 
+    position: fixed; 
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; 
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+    background-color: aliceblue; 
+}  
+
+.header {
+    padding: 10px; 
+} 
+
+.header img {
+    height: 60px;
+    width: 120px;
+}
+
+.navbarComp {
+    height: fit-content;
+    width: fit-content;
+    display: flex; 
+    column-gap: 40px; 
+    padding: 35px;
+} 
+
+.navbarComp a { 
+    font-size: 20px;
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit; 
+    padding: 20px 0px; 
+    margin: 0%;
+}
+.navbarComp a:hover {
+    color: #313af1;
+    border-bottom:3px #646cff solid;
+}
+
+.login {
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+} 
+
+.login a {
+    font-size: 20px;
+    padding: 10px 25px; 
+    border: 0px; 
+    border-radius: 30px;
+    color: white;
+    background-color: #646cff;
+    margin: 0%;
+    transition: box-shadow 0.3s ease;
+} 
+
+.login a:hover{
+    box-shadow: 0 0 20px 5px rgba(92, 95, 151,0.75);
+}  
+
+.login img{
+    height: 50px;
+    width: 50px; 
+    border-radius: 50%; 
+    background-color: #d0d0d0;
+}

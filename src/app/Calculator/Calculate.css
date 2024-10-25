@@ -1,9 +1,12 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-}
+.calculate{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 70px;
+} 
+
 
 .container {
     max-width: 800px;
@@ -14,9 +17,12 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.container > h1 {
+    font-size: 25px;
+    font-weight: 600;
     text-align: center;
     color: #333;
+    margin-bottom: 20px;
 }
 
 h3 {
@@ -45,16 +51,19 @@ input, select {
 }
 
 button {
-    background-color: #4CAF50;
+    font-size: 15px;
+    padding: 10px 25px; 
+    border: 0px; 
+    border-radius: 30px;
     color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
+    background-color: #646cff;
+    margin: 0%;
+    transition: box-shadow 0.3s ease;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #45a049;
+    box-shadow: 0 0 5px 5px rgba(92, 95, 151,0.75);
 }
 
 .result {
@@ -67,4 +76,11 @@ button:hover {
 
 .result h2, .result h3 {
     margin: 0;
+}
+
+.buttonSection{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 30px;
 }
