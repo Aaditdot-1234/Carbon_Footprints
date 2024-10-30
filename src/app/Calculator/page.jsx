@@ -1,49 +1,49 @@
 'use client'
 import React, { useState } from 'react';
+import { account } from '../appwrite';
 import Navbar from '../Navbar/page';
 import './Calculate.css';
+import { footprintAction } from '../actions/footprintAction';
 
 const Calculate = () => {
-  const [sections, setSections] = useState([{ mode: '', fuelType: '', mileage: '', distance: '' }]);
+  const [mode, setMode] = useState('');
+  const [fuelType, setFuelType] = useState('');
+  const [mileage, setMileage] = useState('');
+  const [distance, setDistance] = useState('');
   const [results, setResults] = useState(null);
-
-  const addSection = () => {
-    if (sections.length >= 8) {
-      alert('You can only add up to 8 sections.');
-      return;
-    }
-    setSections([...sections, { mode: '', fuelType: '', mileage: '', distance: '' }]);
-  };
-
-  const removeSection = (index) => {
-    const updatedSections = sections.filter((_, i) => i !== index);
-    setSections(updatedSections);
-  };
-
-  const handleChange = (index, field, value) => {
-    const updatedSections = [...sections];
-    updatedSections[index][field] = value;
-    if (field === 'mode' && (value !== 'Car' && value !== 'Motorbike')) {
-      updatedSections[index].fuelType = '';
-      updatedSections[index].mileage = '';
-    }
-    setSections(updatedSections);
-  };
+  const [totalEmissionFactor, setTotalEmissionFactor] = useState(null);
+  const [totalCarbonFootprint, setTotalCarbonFootprint] = useState(null);
+  const [totalDistanceTravelled, setTotalDistanceTravelled] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const sectionData = [{ mode, fuelType, mileage, distance }];
       const response = await fetch('http://localhost:5000/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sections })
+        body: JSON.stringify({ sections: sectionData })
       });
       const resultData = await response.json();
       setResults(resultData);
+
+      const session = await account.get();
+      const userId = session.$id;
+
+      const totals = await footprintAction(userId, sectionData, resultData); 
+      setTotalEmissionFactor(totals.totalEmissionFactor);
+      setTotalCarbonFootprint(totals.totalCarbonFootprint);
+      setTotalDistanceTravelled(totals.totalDistanceTravelled);
+
+      setMode('');
+      setFuelType('');
+      setMileage('');
+      setDistance('');
     } catch (error) {
       console.error('Error calculating carbon footprint:', error);
     }
-  };
+  }; 
+
 
   return (
     <>
@@ -52,80 +52,73 @@ const Calculate = () => {
         <div className="container">
           <h1>Daily Commute Carbon Footprint Calculator</h1>
           <form onSubmit={handleSubmit}>
-            <div id="sectionsContainer">
-              {sections.map((section, index) => (
-                <div key={index} className="section">
-                  <h3>Commute Section {index + 1}</h3>
-                  <label htmlFor={`mode_${index}`}>Mode of Transport:</label>
-                  <select
-                    id={`mode_${index}`}
-                    value={section.mode}
-                    onChange={(e) => handleChange(index, 'mode', e.target.value)}
-                    required
-                  >
-                    <option value="">Select Mode</option>
-                    <option value="Car">Car</option>
-                    <option value="Motorbike">Motorbike</option>
-                    <option value="Bus">Bus</option>
-                    <option value="Train">Train</option>
-                    <option value="Airplane">Airplane</option>
-                    <option value="Ferry">Ferry</option>
-                    <option value="Bicycle">Bicycle</option>
-                    <option value="Walking">Walking</option>
-                  </select>
+            <div className="section">
+              <h3>Commute Information</h3>
+              
+              <label htmlFor="mode">Mode of Transport:</label>
+              <select
+                id="mode"
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+                required
+              >
+                <option value="">Select Mode</option>
+                <option value="Car">Car</option>
+                <option value="Motorbike">Motorbike</option>
+                <option value="Bus">Bus</option>
+                <option value="Train">Train</option>
+                <option value="Airplane">Airplane</option>
+                <option value="Ferry">Ferry</option>
+                <option value="Bicycle">Bicycle</option>
+                <option value="Walking">Walking</option>
+              </select>
 
-                  <label htmlFor={`fuel_type_${index}`}>Fuel Type:</label>
-                  <select
-                    id={`fuel_type_${index}`}
-                    value={section.fuelType}
-                    onChange={(e) => handleChange(index, 'fuelType', e.target.value)}
-                    disabled={section.mode !== 'Car' && section.mode !== 'Motorbike'}
-                    required={section.mode === 'Car' || section.mode === 'Motorbike'}
-                  >
-                    <option value="">Select Fuel Type</option>
-                    <option value="Petrol">Petrol</option>
-                    <option value="Diesel">Diesel</option>
-                    <option value="CNG">CNG</option>
-                    <option value="Electric">Electric</option>
-                  </select>
+              <label htmlFor="fuel_type">Fuel Type:</label>
+              <select
+                id="fuel_type"
+                value={fuelType}
+                onChange={(e) => setFuelType(e.target.value)}
+                disabled={mode !== 'Car' && mode !== 'Motorbike'}
+                required={mode === 'Car' || mode === 'Motorbike'}
+              >
+                <option value="">Select Fuel Type</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="CNG">CNG</option>
+                <option value="Electric">Electric</option>
+              </select>
 
-                  <label htmlFor={`mileage_${index}`}>Vehicle Mileage (Only for Personal):</label>
-                  <select
-                    id={`mileage_${index}`}
-                    value={section.mileage}
-                    onChange={(e) => handleChange(index, 'mileage', e.target.value)}
-                    disabled={section.mode !== 'Car' && section.mode !== 'Motorbike'}
-                  >
-                    <option value="">Select Mileage</option>
-                    {[...Array(10)].map((_, i) => {
-                      const start = (i + 1) * 5;
-                      const end = start + 5;
-                      return (
-                        <option key={i} value={`${start}-${end}`}>
-                          {start} - {end} kmpl
-                        </option>
-                      );
-                    })}
-                  </select>
+              <label htmlFor="mileage">Vehicle Mileage (Only for Personal):</label>
+              <select
+                id="mileage"
+                value={mileage}
+                onChange={(e) => setMileage(e.target.value)}
+                disabled={mode !== 'Car' && mode !== 'Motorbike'}
+              >
+                <option value="">Select Mileage</option>
+                {[...Array(10)].map((_, i) => {
+                  const start = (i + 1) * 5;
+                  const end = start + 5;
+                  return (
+                    <option key={i} value={`${start}-${end}`}>
+                      {start} - {end} kmpl
+                    </option>
+                  );
+                })}
+              </select>
 
-                  <label htmlFor={`distance_${index}`}>Distance Travelled (in kms):</label>
-                  <input
-                    type="number"
-                    id={`distance_${index}`}
-                    value={section.distance}
-                    onChange={(e) => handleChange(index, 'distance', e.target.value)}
-                    step="0.1"
-                    required
-                  />
-
-                  <button type="button" onClick={() => removeSection(index)}>
-                    Remove Section
-                  </button>
-                </div>
-              ))}
+              <label htmlFor="distance">Distance Travelled (in kms):</label>
+              <input
+                type="number"
+                id="distance"
+                value={distance}
+                onChange={(e) => setDistance(e.target.value)}
+                step="0.1"
+                required
+              />
             </div>
+
             <div className='buttonSection'>
-              <button type="button" onClick={addSection}>Add Section</button>
               <button type="submit">Calculate</button>
             </div>
           </form>
@@ -133,8 +126,9 @@ const Calculate = () => {
           {results && (
             <div className="result">
               <h2>Total Results</h2>
-              <p><strong>Total Emission Factor:</strong> {results.totalEmissionFactor} kg CO₂ per km</p>
-              <p><strong>Total Carbon Footprint:</strong> {results.totalCarbonFootprint} kg CO₂</p>
+              <p><strong>Total Emission Factor:</strong> {totalEmissionFactor} kg CO₂ per km</p>
+              <p><strong>Total Carbon Footprint:</strong> {totalCarbonFootprint} kg CO₂</p>
+              <p><strong>Total Distance Travelled:</strong> {totalDistanceTravelled} km</p>
 
               <h3>Section-wise Results</h3>
               <ul>

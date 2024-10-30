@@ -18,7 +18,6 @@ const Navbar = () => {
       try {
         const response = await account.get();
         setUser(true);
-        console.log("Account Details:", response);
       } catch (error) {
         setUser(false);
         console.log("No user logged in:", error);
@@ -54,7 +53,6 @@ const Navbar = () => {
           <div className='login'>
             {user ? (
               <>
-                <img src='/user2.png' alt='not found' />
                 <a onClick={handleLogout}>Logout</a>
               </>
             ) : (

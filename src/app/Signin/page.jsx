@@ -45,7 +45,6 @@ const Signin = () => {
     
         try{
             const result = await account.create(ID.unique(), email, password, userName, contact);
-            console.log("Registration successful:",result);
             const loginSuccess = await handleLogin();
             if (loginSuccess) {
               setToastMessage('Redirecting to Profile...');
@@ -101,14 +100,6 @@ const Signin = () => {
             </div>
             <div className='divider'></div>
             <div>
-                <button>
-                    <img src="/google.png" alt="not found"/>
-                    Create using Google
-                </button>
-                <button>
-                    <img src="/facebook.png" alt="not found"/>
-                    Create using Facebook
-                </button>
                 <div>
                     <button onClick={handleRegister}>
                         Register

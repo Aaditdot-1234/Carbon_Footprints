@@ -27,32 +27,14 @@ const Login = () => {
         setEmail('')
         setPassword('')
         setToastMessage('Login successful!');
-    }
-    catch(e){
-        console.error("Login error:",  e.message || e)
-        setToastMessage('Login failed. Please try again.');
-    }
-  }  
-
-  async function handleRegister(){ 
-    if (!userName || !email || !password) {
-        setToastMessage('Please fill in all fields.');
-        return;
-    }  
-
-    try{
-        const result = await account.create(ID.unique(), email, password, userName);
-        console.log("Registration successful:",result);
-        setErrorMessage('')
-        handleLogin()
 
         setTimeout(() => {
             router.push('/profile'); // Redirect to the profile page
         }, 1000);
     }
     catch(e){
-        console.error("Registration error:", e.message || e)
-        setToastMessage('Registration failed. Please try again.');
+        console.error("Login error:",  e.message || e)
+        setToastMessage('Login failed. Please try again.');
     }
   }  
   
@@ -89,14 +71,6 @@ const Login = () => {
             </div>
             <div className='divider'></div>
             <div>
-                <button>
-                    <img src="/google.png" alt="not found"/>
-                    Create using Google
-                </button>
-                <button>
-                    <img src="/facebook.png" alt="not found"/>
-                    Create using Facebook
-                </button>
                 <div>
                     <button onClick={handleLogin}>
                         Login
@@ -109,4 +83,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Login 

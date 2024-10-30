@@ -5,13 +5,12 @@ app = Flask(__name__)
 CORS(app)
 
 
+
 @app.route('/calculate', methods=['POST'])
 def calculate():
     data = request.json
     sections = data.get('sections', [])
     
-    total_emission_factor = 0
-    total_carbon_footprint = 0
     section_results = []
 
     for section in sections:
@@ -21,15 +20,12 @@ def calculate():
         distance = float(section.get('distance', 0))
 
         if mileage and '-' in mileage:
-            mileage_value = float(mileage.split('-')[0])  # Take the lower bound of the range
+            mileage_value = float(mileage.split('-')[0]) 
         else:
-            mileage_value = float(mileage) if mileage else 0.0  # Default to 0 if not provided
+            mileage_value = float(mileage) if mileage else 0.0  
 
         emission_factor = calculate_emission_factor(mode, fuel_type, mileage_value)
         carbon_footprint = emission_factor * distance
-        
-        total_emission_factor += emission_factor
-        total_carbon_footprint += carbon_footprint
 
         section_results.append({
             'mode': mode,
@@ -42,20 +38,18 @@ def calculate():
 
     return jsonify({
         'sections': section_results,
-        'totalEmissionFactor': total_emission_factor,
-        'totalCarbonFootprint': total_carbon_footprint
     })
 
 def calculate_emission_factor(mode, fuel_type=None, mileage=None):
     if mode in ['Car', 'Motorbike']:
         if fuel_type == 'Petrol':
-            return 2.3 / mileage  # kg CO₂/km
+            return 2.3 / mileage  
         elif fuel_type == 'Diesel':
-            return 2.7 / mileage  # kg CO₂/km
+            return 2.7 / mileage  
         elif fuel_type == 'CNG':
-            return 1.75 / mileage  # kg CO₂/km
+            return 1.75 / mileage  
         elif fuel_type == 'Electric':
-            return 0.0  # kg CO₂/km for electric vehicles
+            return 0.0 
     elif mode == 'Bus':
         return 0.05
     elif mode == 'Train':
@@ -67,7 +61,7 @@ def calculate_emission_factor(mode, fuel_type=None, mileage=None):
     elif mode in ['Bicycle', 'Walking']:
         return 0.0
     else:
-        return 0.0  # default case if no valid mode is selected
+        return 0.0  
 
 if __name__ == '__main__':
     app.run(debug=True)
