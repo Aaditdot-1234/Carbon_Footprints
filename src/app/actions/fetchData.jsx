@@ -79,9 +79,9 @@ export async function fetchDataTable2(userId) {
 
 /**
  * @typedef {Object} CreditPointsData
- * @property {string} UserID 
- * @property {number} creditPoints 
+ * @property {string} UserID  
  * @property {Date} calculatedAt 
+ * @property {number} creditPoints
  */
 
 /**
@@ -90,15 +90,15 @@ export async function fetchDataTable2(userId) {
  * @returns {Promise<CreditPointsData[]>} 
  */
 export async function fetchCreditPoints(userId) {
-    try {
+    try { 
         const result3 = await db.listDocuments('footprints', 'creditPoints', [
             Query.equal('UserID', userId)
         ]);
 
         return result3.documents.map(doc => ({
             UserID: doc.UserID,
-            creditPoints: doc.creditPoints,
-            calculatedAt: doc.calculatedAt || doc.$createdAt
+            calculatedAt: doc.calculatedAt || doc.$createdAt,
+            creditPoints: doc.credit,
         }));
     } catch (error) {
         console.error("Error fetching Credit Points data:", error);

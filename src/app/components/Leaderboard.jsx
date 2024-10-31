@@ -28,13 +28,16 @@ export default function Leaderboard() {
                 const summary = await fetchDataTable2(userId);
                 const creditData = await fetchCreditPoints(userId);
 
+                const top = creditData.length > 0 ? creditData.length - 1 : null;
+
                 if (summary.length && creditData.length) {
                     const userData = {
                         UserID: userId,
+                        Name : name, 
                         totalEmissionFactor: summary[0].totalEmissionFactor,
                         totalCarbonFootprint: summary[0].totalCarbonFootprint,
                         totalDistanceTravelled: summary[0].totalDistanceTravelled,
-                        creditPoints: creditData[0].creditPoints
+                        creditPoints: creditData[top].creditPoints
                     };
 
                     leaderboard.push(userData);
@@ -48,34 +51,34 @@ export default function Leaderboard() {
                 setLoading(false);
             }
         };
-
         fetchLeaderboardData();
     }, []);
 
+    console.log(leaderboardData)
+
     return (
         <div>
-            <h1>Leaderboard</h1>
             {loading ? (
                 <p>Loading leaderboard...</p>
             ) : (
-                <table>
-                    <thead >
-                        <tr>
-                            <th className="px-2.5">Username</th>
-                            <th className="px-2.5">Total Emission Factor</th>
-                            <th className="px-2.5">Total Carbon Footprint</th>
-                            <th className="px-2.5">Total Distance Travelled</th>
-                            <th className="px-2.5">Credit Points</th>
+                <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+                    <thead>
+                        <tr className="bg-gray-200 border-b border-gray-300">
+                            <th className="px-4 py-2 border-r border-gray-300">Username</th>
+                            <th className="px-4 py-2 border-r border-gray-300">Total Emission Factor</th>
+                            <th className="px-4 py-2 border-r border-gray-300">Total Carbon Footprint</th>
+                            <th className="px-4 py-2 border-r border-gray-300">Total Distance Travelled</th>
+                            <th className="px-4 py-2">Credit Points</th>
                         </tr>
                     </thead>
                     <tbody>
                         {leaderboardData.map((user, index) => (
-                            <tr key={index}>
-                                <td className="px-2.5">{user.name}</td>
-                                <td className="px-2.5">{user.totalEmissionFactor}</td>
-                                <td className="px-2.5">{user.totalCarbonFootprint}</td>
-                                <td className="px-2.5">{user.totalDistanceTravelled}</td>
-                                <td className="px-2.5">{user.creditPoints}</td>
+                            <tr key={index} className="odd:bg-white even:bg-gray-50 border-b border-gray-300">
+                                <td className="px-4 py-2 border-r border-gray-300">{user.Name}</td>
+                                <td className="px-4 py-2 border-r border-gray-300">{user.totalEmissionFactor}</td>
+                                <td className="px-4 py-2 border-r border-gray-300">{user.totalCarbonFootprint}</td>
+                                <td className="px-4 py-2 border-r border-gray-300">{user.totalDistanceTravelled}</td>
+                                <td className="px-4 py-2">{user.creditPoints}</td>
                             </tr>
                         ))}
                     </tbody>

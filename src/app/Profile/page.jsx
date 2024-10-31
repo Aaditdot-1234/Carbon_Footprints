@@ -83,11 +83,6 @@ const Profile = () => {
     return acc;
   }, {});
 
-  const barChartDataByFuel = Object.keys(carbonFootprintByFuel).map(fuel => ({
-    fuel,
-    carbonFootprint: carbonFootprintByFuel[fuel],
-  }));
-
   const barChartData = displayMode === 'By Mode'
   ? Object.keys(carbonFootprintByMode).map(mode => ({
       mode,
@@ -181,15 +176,15 @@ const Profile = () => {
                     <Button variant='outline'>Select</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem>last week</DropdownMenuItem>
-                    <DropdownMenuItem>last month</DropdownMenuItem>
-                    <DropdownMenuItem>last Year</DropdownMenuItem>
-                    <DropdownMenuItem>Full History</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setDateRange('last week')}>last week</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setDateRange('last month')}>last month</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setDateRange('last year')}>last Year</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setDateRange('full history')}>Full History</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div> 
               <ResponsiveContainer width='100%' minHeight={300} className='flex flex-wrap items-center justify-center'>  
-                <LineChart data={table1Data}>
+                <LineChart data={filteredDataByDateRange}>
                   <CartesianGrid stroke="hsl(var(--muted))" />
                   <XAxis dataKey='createdAt' stroke="hsl(var(--primary))" tickFormatter={(date) => format(new Date(date), 'dd-MM-yyyy')}/>
                   <YAxis stroke="hsl(var(--primary))"/>
@@ -209,17 +204,19 @@ const Profile = () => {
             > 
               <div className='w-full flex flex-row items-end justify-between mr-10'>
                 <h2 className='ml-8 text-[25px]'>Total Emission Factor vs mode</h2> 
-                <DropdownMenu>
+                {/* <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant='outline'>Select</Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>last week</DropdownMenuItem>
-                    <DropdownMenuItem>last month</DropdownMenuItem>
-                    <DropdownMenuItem>last Year</DropdownMenuItem>
-                    <DropdownMenuItem>Full History</DropdownMenuItem>
+                  <DropdownMenuContent>  
+                    <div onClick={() => setDisplayMode('By Mode')}>
+                      <DropdownMenuItem>By Mode</DropdownMenuItem>
+                    </div>
+                    <div onClick={() => setDisplayMode('By Fuel')}>
+                      <DropdownMenuItem>By Fuel</DropdownMenuItem>
+                    </div>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
               </div>
               <ResponsiveContainer width='100%' minHeight={300} className='flex flex-wrap items-center justify-center'>  
                 <PieChart>
@@ -232,7 +229,7 @@ const Profile = () => {
               scaleOnClick
               scale={1.3}
               transformOrigin='bottom right'
-              className='bg-white h-fit w-2/3 flex-col gap-2.5'
+              className='bg-white h-fit w-2/3 flex-col gap-2.5 min-h-[367.5px]'
               ontoggle={handleCardClick}
             > 
               <div className='w-full flex flex-row items-end justify-between mx-[100px]'>
